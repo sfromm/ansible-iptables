@@ -1,7 +1,7 @@
 ---
 - name: install iptables related packages
   yum: name={{item}} state=installed
-  with_item: iptables_pkgs
+  with_items: iptables_pkgs
 
 - name: template iptables
   template: >
