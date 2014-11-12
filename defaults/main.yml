@@ -1,5 +1,6 @@
 ---
 # defaults file for iptables
+bridge_physdev: no
 ipv4_allowed_networks: [ ]
 ipv4_blackhole:
     - 169.254.1.1
