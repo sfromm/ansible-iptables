@@ -1,0 +1,75 @@
+# Firewall configuration written by ansible role iptables
+# Manual customization of this file is discouraged
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+# Set up logdrop and blackhole chains
+-N LOGDROP
+-A LOGDROP -m limit --limit 30/min -j LOG --log-prefix "[iptables] drop " --log-tcp-options --log-ip-options
+-A LOGDROP -p tcp -j REJECT --reject-with tcp-reset
+-A LOGDROP -p udp -j REJECT --reject-with icmp-port-unreachable
+-A LOGDROP -j DROP
+-N BLACKHOLE
+{% for addr in ipv4_blackhole %}
+-A BLACKHOLE -s {{ addr }} -j LOGDROP
+{% endfor %}
+-A INPUT -j BLACKHOLE
+{% if bridge_physdev %}
+# Allow bridging
+-I FORWARD -m physdev --physdev-is-bridged -j ACCEPT
+{% endif %}
+{#
+   Define a set of 'trusted' networks where traffic is simply allowed.
+#}
+{% for network in ipv4_allowed_networks %}
+-A ALLOWNET -s {{ network }} -m state --state NEW,ESTABLISHED -j ACCEPT
+{% endfor %}
+{#
+   Allow UDP and TCP incoming connections.
+#}
+{% for port in ip_allowed_udp_ports %}
+-A ALLOWSRV -p udp -m udp --dport {{ port }} -m state --state NEW,ESTABLISHED -j ACCEPT
+{% endfor %}
+{% for port in ip_allowed_tcp_ports %}
+-A ALLOWSRV -p tcp -m tcp --dport {{ port }} -m state --state NEW,ESTABLISHED -j ACCEPT
+{% endfor %}
+{#
+   Define some sanity limits for incoming ssh connections
+#}
+# Specify sanity limits
+-N SANITY
+-A SANITY -p icmp -m limit --limit 180/m --limit-burst 60 -j ACCEPT
+-A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name sshscan
+-A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name sshscan -j LOGDROP
+# Tie everything into INPUT
+-A INPUT -i lo -j ACCEPT
+{#
+   The following block applies the ALLOWNET, SANITY, and ALLOWSRV
+   chains to the public ipv4 interface, which is determined by the
+   ansible_default_ipv4.interface fact.
+   All other interfaces that are active and have an ipv4 address
+   are simply allowed.  This should be enhanced to handle cases
+   where there are multiple public-facing interfaces.
+#}
+{% for iface in ansible_interfaces|sort %}
+{%     set ifacekey = iface.replace('-', '_') %}
+{%     if iface == ansible_default_ipv4.interface %}
+-A INPUT -i {{ ansible_default_ipv4.interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -i {{ ansible_default_ipv4.interface }} -j ALLOWNET
+-A INPUT -i {{ ansible_default_ipv4.interface }} -j SANITY
+-A INPUT -i {{ ansible_default_ipv4.interface }} -j ALLOWSRV
+{%     else %}
+{%         if iface != 'lo' %}
+{%             set ifcfg = hostvars[ansible_fqdn]['ansible_'+ifacekey] %}
+{%             if ifcfg.active %}
+{%                 if 'ipv4' in ifcfg and 'address' in ifcfg['ipv4'] %}
+-A INPUT -i {{ iface }} -j ACCEPT
+{%                 endif %}
+{%             endif %}
+{%         endif %}
+{%     endif %}
+{% endfor %}
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+COMMIT

@@ -1,0 +1,25 @@
+---
+- name: install iptables related packages
+  yum: name={{item}} state=installed
+  with_item: iptables_pkgs
+
+- name: template iptables
+  template: >
+      src=iptables.j2
+      dest=/etc/sysconfig/iptables
+      owner=root
+      group=root
+      mode=0600
+  notify: restart iptables
+
+- name: template ip6tables
+  template: >
+      src=ip6tables.j2
+      dest=/etc/sysconfig/ip6tables
+      owner=root
+      group=root
+      mode=0600
+  notify: restart ip6tables
+
+- name: enable and start iptables service
+  service: name=iptables state=started enabled=yes

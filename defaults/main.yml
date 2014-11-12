@@ -1,0 +1,10 @@
+---
+# defaults file for iptables
+ipv4_allowed_networks: [ ]
+ipv4_blackhole:
+    - 169.254.1.1
+ipv6_allowed_networks: [ ]
+ipv6_blackhole: [ ]
+ip_allowed_tcp_ports:
+    - 22
+ip_allowed_udp_ports: [ ]
