@@ -22,12 +22,14 @@
 {#
    Define a set of 'trusted' networks where traffic is simply allowed.
 #}
+-N ALLOWNET
 {% for network in ipv6_allowed_networks %}
 -A ALLOWNET -s {{ network }} -m state --state NEW,ESTABLISHED -j ACCEPT
 {% endfor %}
 {#
    Allow UDP and TCP incoming connections.
 #}
+-N ALLOWSRV
 {% for port in ip_allowed_udp_ports %}
 -A ALLOWSRV -p udp -m udp --dport {{ port }} -m state --state NEW,ESTABLISHED -j ACCEPT
 {% endfor %}
