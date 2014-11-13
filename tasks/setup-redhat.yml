@@ -20,6 +20,11 @@
       group=root
       mode=0600
   notify: restart ip6tables
+  when: "'scope' in ansible_default_ipv6 and ansible_default_ipv6.scope == 'global'"
 
 - name: enable and start iptables service
   service: name=iptables state=started enabled=yes
+
+- name: enable and start ip6tables service
+  service: name=ip6tables state=started enabled=yes
+  when: "'scope' in ansible_default_ipv6 and ansible_default_ipv6.scope == 'global'"
