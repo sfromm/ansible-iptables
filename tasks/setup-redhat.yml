@@ -1,7 +1,10 @@
 ---
+- name: install iptables
+  yum: name=iptables state=installed
+
 - name: install iptables related packages
-  yum: name={{item}} state=installed
-  with_items: iptables_pkgs
+  yum: name=iptables-services state=installed
+  when: ansible_distribution_major_version|int >= 7
 
 - name: template iptables
   template: >
