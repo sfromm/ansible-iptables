@@ -63,7 +63,7 @@
 -A INPUT -i {{ ansible_default_ipv4.interface }} -j ALLOWSRV
 {%     else %}
 {%         if iface != 'lo' %}
-{%             set ifcfg = hostvars[ansible_fqdn]['ansible_'+ifacekey] %}
+{%             set ifcfg = hostvars[inventory_hostname]['ansible_'+ifacekey] %}
 {%             if ifcfg.active %}
 {%                 if 'ipv4' in ifcfg and 'address' in ifcfg['ipv4'] %}
 -A INPUT -i {{ iface }} -j ACCEPT
