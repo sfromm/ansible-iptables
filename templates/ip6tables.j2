@@ -8,7 +8,7 @@
 -N LOGDROP
 -A LOGDROP -m limit --limit 30/min -j LOG --log-prefix "[iptables] drop " --log-tcp-options --log-ip-options
 -A LOGDROP -p tcp -j REJECT --reject-with tcp-reset
--A LOGDROP -p udp -j REJECT --reject-with icmp-port-unreachable
+-A LOGDROP -p udp -j REJECT --reject-with icmp6-port-unreachable
 -A LOGDROP -j DROP
 -N BLACKHOLE
 {% for addr in ipv6_blackhole %}
