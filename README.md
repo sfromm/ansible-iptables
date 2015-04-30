@@ -21,16 +21,17 @@ by inventory:
 - **ip_allowed_udp_ports**: list of UDP ports to allow connectivity to.
     This should be used for services on the host.
 - **ipv4_allowed_networks**: list of IPv4 addresses to allow all traffic
-  from.  This defaults to `224.0.0.0/8`, the IPv4 multicast netblock.
+    from.  This defaults to an empty list.
 - **ipv6_allowed_networks**: list of IPv6 addresses to allow all traffic
-  from.  This defaults to `fe80::10` (link-local prefix) and `ff00::/8`
-  (multicast prefix).
+    from.  This defaults to an empty list.
 - **ipv4_blackhole**: list of IPv4 addresses to block.
 - **ipv6_blackhole**: list of IPv6 addresses to block.
 
-If you override **ipv4_allowed_networks** or **ipv6_allowed_networks**,
-you are strongly encouraged to keep the defaults in place.  In
-particular, IPv6 will not work well without those defaults allowed.
+The IPv4 template specifically allows traffic to the multicast address
+range, `224.0.0.0/8`.  In a related fashion, the IPv6 template allows
+traffic to the multicast address range, `ff00::/8`, and traffic to and
+from the link local address range, `fe80::/10`.  IPv6 will not work if
+you do not allow these address ranges.
 
 Dependencies
 ------------

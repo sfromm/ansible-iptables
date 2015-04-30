@@ -23,6 +23,9 @@
    Define a set of 'trusted' networks where traffic is simply allowed.
 #}
 -N ALLOWNET
+-A ALLOWNET -d {{ ipv6_multicast_net }} -j ACCEPT
+-A ALLOWNET -d {{ ipv6_scope_link_net }} -j ACCEPT
+-A ALLOWNET -s {{ ipv6_scope_link_net }} -j ACCEPT
 {% for network in ipv6_allowed_networks %}
 -A ALLOWNET -s {{ network }} -m state --state NEW,ESTABLISHED -j ACCEPT
 {% endfor %}
