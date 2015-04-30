@@ -1,6 +1,9 @@
 ---
 # defaults file for iptables
 bridge_physdev: no
+iptables_do_src_nat_postrouting: no
+ipv4_src_nat_network: ""
+ipv4_postrouting_output_interface: "{{ ansible_default_ipv4.interface }}"
 ipv4_allowed_networks: [ ]
 ipv4_blackhole:
   - 169.254.1.1

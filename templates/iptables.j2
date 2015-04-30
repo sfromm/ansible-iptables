@@ -1,5 +1,14 @@
+# {{ ansible_managed }}
 # Firewall configuration written by ansible role iptables
 # Manual customization of this file is discouraged
+{% if iptables_do_src_nat_postrouting %}
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A POSTROUTING -s {{ ipv4_src_nat_network }} -o {{ ipv4_postrouting_output_interface }} -j MASQUERADE
+COMMIT
+{% endif %}
 *filter
 :INPUT DROP [0:0]
 :FORWARD ACCEPT [0:0]

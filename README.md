@@ -26,6 +26,13 @@ by inventory:
     from.  This defaults to an empty list.
 - **ipv4_blackhole**: list of IPv4 addresses to block.
 - **ipv6_blackhole**: list of IPv6 addresses to block.
+- **iptables_do_src_nat_postrouting**:  boolean for whether to do source
+  NAT postrouting in the *nat* table.  One example of using this would
+  be deploying something like [OpenVPN](https://openvpn.net).
+- **ipv4_src_nat_network**: The source network to use for postrouting in
+  the *nat* table.
+- **ipv4_postrouting_output_interface**: Output interface to use for
+  source NAT postrouting.  Defaults to *ansible_default_ipv4.interface*.
 
 The IPv4 template specifically allows traffic to the multicast address
 range, `224.0.0.0/8`.  In a related fashion, the IPv6 template allows
