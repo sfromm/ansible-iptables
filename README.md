@@ -33,6 +33,8 @@ by inventory:
   the *nat* table.
 - **ipv4_postrouting_output_interface**: Output interface to use for
   source NAT postrouting.  Defaults to *ansible_default_ipv4.interface*.
+- **ip6tables_has_recent**: boolean for whether *ip6tables* supports the
+  *recent* module.  This defaults to *yes*, except for *EL5* where it is *no*.
 
 The IPv4 template specifically allows traffic to the multicast address
 range, `224.0.0.0/8`.  In a related fashion, the IPv6 template allows
