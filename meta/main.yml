@@ -21,8 +21,8 @@ galaxy_info:
   - name: EL
     versions:
   #  - all
-  #  - 5
-  #  - 6
+    - 5
+    - 6
     - 7
   #- name: GenericUNIX
   #  versions:

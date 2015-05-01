@@ -1,6 +1,7 @@
 ---
 # defaults file for iptables
 bridge_physdev: no
+ip6tables_has_recent: yes
 iptables_do_src_nat_postrouting: no
 ipv4_src_nat_network: ""
 ipv4_postrouting_output_interface: "{{ ansible_default_ipv4.interface }}"

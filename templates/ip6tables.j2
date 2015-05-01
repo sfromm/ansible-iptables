@@ -46,8 +46,13 @@
 # Specify sanity limits
 -N SANITY
 -A SANITY -p icmpv6 -m limit --limit 180/m --limit-burst 60 -j ACCEPT
+{#
+   Older versions of iptables do not support ipv6 and recent.  Punt on those.
+#}
+{% if ip6tables_has_recent %}
 -A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name sshscan
 -A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name sshscan -j LOGDROP
+{% endif %}
 # Tie everything into INPUT
 -A INPUT -i lo -j ACCEPT
 {#
