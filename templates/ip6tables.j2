@@ -28,17 +28,17 @@
 -A ALLOWNET -d {{ ipv6_scope_link_net }} -j ACCEPT
 -A ALLOWNET -s {{ ipv6_scope_link_net }} -j ACCEPT
 {% for network in ipv6_allowed_networks %}
--A ALLOWNET -s {{ network }} -m state --state NEW,ESTABLISHED -j ACCEPT
+-A ALLOWNET -s {{ network }}{% if ip6tables_has_state_recent %} -m state --state NEW,ESTABLISHED{% endif %} -j ACCEPT
 {% endfor %}
 {#
    Allow UDP and TCP incoming connections.
 #}
 -N ALLOWSRV
 {% for port in ip_allowed_udp_ports %}
--A ALLOWSRV -p udp -m udp --dport {{ port }} -m state --state NEW,ESTABLISHED -j ACCEPT
+-A ALLOWSRV -p udp -m udp --dport {{ port }}{% if ip6tables_has_state_recent %} -m state --state NEW,ESTABLISHED{% endif %} -j ACCEPT
 {% endfor %}
 {% for port in ip_allowed_tcp_ports %}
--A ALLOWSRV -p tcp -m tcp --dport {{ port }} -m state --state NEW,ESTABLISHED -j ACCEPT
+-A ALLOWSRV -p tcp -m tcp --dport {{ port }}{% if ip6tables_has_state_recent %} -m state --state NEW,ESTABLISHED{% endif %} -j ACCEPT
 {% endfor %}
 {#
    Define some sanity limits for incoming ssh connections
@@ -49,7 +49,7 @@
 {#
    Older versions of iptables do not support ipv6 and recent.  Punt on those.
 #}
-{% if ip6tables_has_recent %}
+{% if ip6tables_has_state_recent %}
 -A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --set --name sshscan
 -A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name sshscan -j LOGDROP
 {% endif %}
@@ -66,7 +66,9 @@
 {% for iface in ansible_interfaces|sort %}
 {%     set ifacekey = iface.replace('-', '_') %}
 {%     if 'interface' in ansible_default_ipv6 and iface == ansible_default_ipv6.interface %}
+{%         if ip6tables_has_state_recent %}
 -A INPUT -i {{ ansible_default_ipv6.interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+{%         endif %}
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j ALLOWNET
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j SANITY
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j ALLOWSRV

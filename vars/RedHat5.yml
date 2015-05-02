@@ -1,2 +1,2 @@
 ---
-ip6tables_has_recent: no
+ip6tables_has_state_recent: no
