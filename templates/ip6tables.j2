@@ -75,7 +75,7 @@
 {%     else %}
 {%         if iface != 'lo' %}
 {%             set ifcfg = hostvars[inventory_hostname]['ansible_'+ifacekey] %}
-{%             if ifcfg.active %}
+{%             if 'active' in ifcfg and ifcfg.active %}
 {%                 if 'ipv6' in ifcfg %}
 -A INPUT -i {{ iface }} -j ACCEPT
 {%                 endif %}
