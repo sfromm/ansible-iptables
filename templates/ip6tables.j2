@@ -34,6 +34,7 @@
    Allow UDP and TCP incoming connections.
 #}
 -N ALLOWSRV
+
 {% for port in ip_allowed_udp_ports %}
 -A ALLOWSRV -p udp -m udp --dport {{ port }}{% if ip6tables_has_state_recent %} -m state --state NEW,ESTABLISHED{% endif %} -j ACCEPT
 {% endfor %}
@@ -45,7 +46,7 @@
 #}
 # Specify sanity limits
 -N SANITY
--A SANITY -p icmpv6 -m limit --limit 180/m --limit-burst 60 -j ACCEPT
+-A SANITY -p ipv6-icmp -m limit --limit 180/m --limit-burst 60 -j ACCEPT
 {#
    Older versions of iptables do not support ipv6 and recent.  Punt on those.
 #}
@@ -54,6 +55,7 @@
 -A SANITY -p tcp -m tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 4 --name sshscan -j LOGDROP
 {% endif %}
 # Tie everything into INPUT
+-A INPUT -p ipv6-icmp -j ACCEPT
 -A INPUT -i lo -j ACCEPT
 {#
    The following block applies the ALLOWNET, SANITY, and ALLOWSRV
