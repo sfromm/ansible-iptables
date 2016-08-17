@@ -16,8 +16,8 @@ COMMIT
 # Set up logdrop and blackhole chains
 -N LOGDROP
 -A LOGDROP -m limit --limit 30/min -j LOG --log-prefix "[iptables] drop " --log-tcp-options --log-ip-options
--A LOGDROP -p tcp -j REJECT --reject-with tcp-reset
--A LOGDROP -p udp -j REJECT --reject-with icmp-port-unreachable
+-A LOGDROP -p tcp -j REJECT --reject-with {{ iptables_tcp_reject }}
+-A LOGDROP -p udp -j REJECT --reject-with {{ iptables_udp_reject }}
 -A LOGDROP -j DROP
 -N BLACKHOLE
 {% for addr in ipv4_blackhole %}
@@ -82,6 +82,6 @@ COMMIT
 {%         endif %}
 {%     endif %}
 {% endfor %}
--A INPUT -p tcp -j REJECT --reject-with tcp-reset
--A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -p tcp -j REJECT --reject-with {{ iptables_tcp_reject }}
+-A INPUT -p udp -j REJECT --reject-with {{ iptables_udp_reject }}
 COMMIT

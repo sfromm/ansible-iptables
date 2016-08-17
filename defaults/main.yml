@@ -3,6 +3,10 @@
 bridge_physdev: no
 ip6tables_has_state_recent: yes
 iptables_do_src_nat_postrouting: no
+iptables_tcp_reject: icmp-port-unreachable
+iptables_udp_reject: icmp-port-unreachable
+ip6tables_tcp_reject: icmp6-port-unreachable
+ip6tables_udp_reject: icmp6-port-unreachable
 ipv4_src_nat_network: ""
 ipv4_postrouting_output_interface: "{{ ansible_default_ipv4.interface }}"
 ipv4_allowed_networks: [ ]

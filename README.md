@@ -26,6 +26,18 @@ by inventory:
     from.  This defaults to an empty list.
 - **ipv4_blackhole**: list of IPv4 addresses to block.
 - **ipv6_blackhole**: list of IPv6 addresses to block.
+- **iptables_tcp_reject**: Mechanism to reject a TCP connection.  Refer
+  to iptables documentation for specific options.  Defaults to
+  `icmp-port-unreachable`. 
+- **iptables_udp_reject**: Mechanism to reject a UDP connection.  Refer 
+  to iptables documentation for specific options.  Defaults to
+  `icmp-port-unreachable`. 
+- **ip6tables_tcp_reject**: Mechanism to reject a TCP connection for
+  IPv6.  Refer to iptables documentation for specific options.  Defaults
+  to `icmp6-port-unreachable`.
+- **ip6tables_udp_reject**: Mechanism to reject a UDP connection for
+  IPv6.  Refer to iptables documentation for specific options.  Defaults
+  to `icmp6-port-unreachable`.
 - **iptables_do_src_nat_postrouting**:  boolean for whether to do source
   NAT postrouting in the *nat* table.  One example of using this would
   be deploying something like [OpenVPN](https://openvpn.net).
