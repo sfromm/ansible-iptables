@@ -64,22 +64,14 @@ COMMIT
    are simply allowed.  This should be enhanced to handle cases
    where there are multiple public-facing interfaces.
 #}
+-A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT ! -i {{ ansible_default_ipv4.interface }} -j ACCEPT
 {% for iface in ansible_interfaces|sort %}
 {%     set ifacekey = iface.replace('-', '_') %}
 {%     if iface == ansible_default_ipv4.interface %}
--A INPUT -i {{ ansible_default_ipv4.interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
 -A INPUT -i {{ ansible_default_ipv4.interface }} -j ALLOWNET
 -A INPUT -i {{ ansible_default_ipv4.interface }} -j SANITY
 -A INPUT -i {{ ansible_default_ipv4.interface }} -j ALLOWSRV
-{%     else %}
-{%         if iface != 'lo' %}
-{%             set ifcfg = hostvars[inventory_hostname]['ansible_'+ifacekey] %}
-{%             if 'active' in ifcfg and ifcfg.active %}
-{%                 if 'ipv4' in ifcfg and 'address' in ifcfg['ipv4'] %}
--A INPUT -i {{ iface }} -j ACCEPT
-{%                 endif %}
-{%             endif %}
-{%         endif %}
 {%     endif %}
 {% endfor %}
 -A INPUT -p tcp -j REJECT --reject-with {{ iptables_tcp_reject }}
