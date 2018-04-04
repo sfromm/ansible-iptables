@@ -1,0 +1,16 @@
+[Unit]
+Description=iptables firewall
+After=syslog.socket
+AssertPathExists=/etc/iptables/rules.v4
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/netfilter-persistent start
+ExecReload=/usr/sbin/netfilter-persistent reload
+ExecStop=/usr/sbin/netfilter-persistent stop
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=basic.target
