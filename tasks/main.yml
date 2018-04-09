@@ -7,8 +7,8 @@
   include_vars: "{{ ansible_os_family }}5.yml"
   when: ansible_distribution_release == "Tikanga"
 
-- include: setup-redhat.yml
+- include_tasks: setup-redhat.yml
   when: ansible_os_family == "RedHat"
 
-- include: setup-debian.yml
+- include_tasks: setup-debian.yml
   when: ansible_os_family == "Debian"
