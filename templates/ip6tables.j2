@@ -72,9 +72,6 @@
 {% for iface in ansible_interfaces|sort %}
 {%     set ifacekey = iface.replace('-', '_') %}
 {%     if 'interface' in ansible_default_ipv6 and iface == ansible_default_ipv6.interface %}
-{%         if ip6tables_has_state_recent %}
--A INPUT -i {{ ansible_default_ipv6.interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
-{%         endif %}
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j ALLOWNET
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j SANITY
 -A INPUT -i {{ ansible_default_ipv6.interface }} -j ALLOWSRV
