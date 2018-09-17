@@ -21,7 +21,7 @@
       group=root
       mode=0600
       backup=yes
-  notify: restart ip6tables
+  notify: restart iptables
   when: "'scope' in ansible_default_ipv6 and ansible_default_ipv6.scope == 'global'"
 
 - name: template iptables service
