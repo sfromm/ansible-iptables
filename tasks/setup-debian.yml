@@ -1,6 +1,6 @@
 ---
 - name: install iptables
-  package: name={{ item }} state=installed
+  package: name={{ item }} state=present
   with_items: "{{ iptables_pkgs }}"
 
 - name: template iptables
